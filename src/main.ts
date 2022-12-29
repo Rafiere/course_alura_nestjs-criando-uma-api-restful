@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -17,6 +18,9 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+
+  /* Estamos permitindo que o class validator resolva as dependências das suas classes da mesma forma que o Class Validator resolve. O segundo parâmetro diz que, se ele não conseguir resolver os erros de dependência pelo container do Nest, ele utilizará o seu próprio container para tentar resolver essas dependências. */
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.listen(3000);
 }
